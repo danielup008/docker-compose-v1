@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  database:
+    container_name: ${elpepe}
+    image: mongo:6.0.6
+    volumes:
+      - VolumenDockerizado:/data/db
+    ports:
+      - "27017:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: daniel
+      MONGO_INITDB_ROOT_PASSWORD: Password
+    command: ['--auth']
+
+  dbmanager:
+    depends_on:
+      - database
+    container_name: mongoExpress
+    image: mongo-express:1.0.0-alpha.4
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${daniel}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${Password}
+      - ME_CONFIG_MONGODB_SERVER=${elpepe}
+    restart: always
+
+volumes:
+  VolumenDockerizado:
+    external: false
